@@ -1,0 +1,7 @@
+*.pyc
+*.pyo
+.idea
+.cache
+build
+dist
+venv

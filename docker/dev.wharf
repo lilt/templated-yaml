@@ -1,0 +1,31 @@
+---
+dockerfile: |
+  FROM naz/baseimage:v1
+
+  # Get newest package list
+  RUN apt-get update && \
+      apt-get upgrade -y
+
+  RUN apt-cache search python3-venv
+
+  # Install base packages for development
+  RUN apt-get install -y \
+      sudo \
+      ant \
+      default-jdk \
+      python3-venv \
+      gcc \
+      python3-pip
+
+  ENTRYPOINT ["/docker/entrypoint"]
+
+image:
+  repository: naz/templated-yaml
+  tag: v1-dev
+
+name: templated-yaml
+hostname: templated-yaml
+
+volumes:
+  - ../:/workspace
+  - ~/.ssh:/ssh

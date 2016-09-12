@@ -1,0 +1,7 @@
+---
+
+tyaml.mixins:
+  - 'base.yml'
+  - 'base2.yml'
+
+full_name: "{{ first_name }} {{ last_name }}"

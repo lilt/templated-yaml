@@ -1,0 +1,6 @@
+---
+
+name:
+  first: first
+  last: last
+  full: "{{ name.first }} {{ name.last }}"

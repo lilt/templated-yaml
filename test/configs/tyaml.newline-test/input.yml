@@ -1,0 +1,10 @@
+---
+
+name:
+  first: first
+  last: last
+
+address: |
+         123 main St.
+         Citytown NY, 12345
+         Care of {{ name.first }} {{ name.last }}

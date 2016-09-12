@@ -1,0 +1,5 @@
+---
+
+tyaml.mixins:
+  - base2.yml
+first_name: first
