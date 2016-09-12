@@ -6,8 +6,6 @@ dockerfile: |
   RUN apt-get update && \
       apt-get upgrade -y
 
-  RUN apt-cache search python3-venv
-
   # Install base packages for development
   RUN apt-get install -y \
       sudo \
