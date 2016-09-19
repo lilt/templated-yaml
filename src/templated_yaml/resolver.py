@@ -7,8 +7,9 @@ class TYamlProcessors(object):
     @classmethod
     def mixins(cls, resolver, current_context, value):
         for mixin in value:
+            base_dir = os.path.dirname(resolver._original_file) if resolver._original_file else os.getcwd()
             base_file_path = os.path.abspath(os.path.join(
-                os.path.dirname(resolver._original_file),
+                base_dir,
                 mixin
             ))
 
@@ -43,7 +44,7 @@ class TYamlResolver(object):
     @classmethod
     def new_from_string(cls, content):
         resolver = TYamlResolver(yaml.load(content))
-        resolver._original_file = os.getcwd() + '_in_memory_stream_.yml'
+        resolver._original_file = None
 
         return resolver
 
@@ -51,23 +52,30 @@ class TYamlResolver(object):
         if not context: context = {}
 
         current_context = { **self._data, **context }
+        def enumerate_object(obj):
+            try:
+                return obj.items()
+            except:
+                return enumerate(obj)
+
 
         def walk_dict(node, keys=None):
             if not keys: keys = []
 
-            for key, item in node.items():
+            for key, item in enumerate_object(node):
                 key_chain = keys + [key,]
 
-                if isinstance(item, collections.Mapping):
+                if isinstance(item, collections.Mapping) or isinstance(item, list):
                     for i in walk_dict(item, key_chain): yield i
-                else:
-                    yield node, key_chain, item
+
+                yield node, key_chain, item
 
         pre_processors = []
 
         # get a list of pre-processors to handle tyaml directives easier
         for parent, key_chain, item in walk_dict(current_context):
-            key = '.'.join(key_chain)
+            key = '.'.join([str(i) for i in key_chain]).lower()
+
             processor = TYamlResolver.processors.get(key, None)
             if processor:
                 pre_processors += [(processor, item, parent, key_chain[-1])]
@@ -76,11 +84,16 @@ class TYamlResolver(object):
             del node_parent[node_key]
             current_context = processor(self, current_context, item)
 
+        queued_updates = []
         # do variable substitution on any strings, since they may contain template variables
         for parent, key_chain, item in walk_dict(current_context):
             if isinstance(item, str):
                 template = Template(item)
+                #queued_updates.append((parent, key_chain[-1], template.render(current_context)))
                 parent[key_chain[-1]] = template.render(current_context)
+
+        #for node, key, value in queued_updates:
+        #    node[key] = value
 
 
         return current_context

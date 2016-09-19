@@ -49,3 +49,7 @@ def test_extends_preserve_child_render():
 
 def test_newline_render():
     run_test('tyaml.newline-test')
+
+
+def test_list_variable_substitution():
+    run_test('tyaml.list-variable-substitution')
