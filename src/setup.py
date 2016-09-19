@@ -59,7 +59,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='yaml development',
+    keywords='configuration templated yaml development',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().

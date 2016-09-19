@@ -14,5 +14,6 @@ Templated YAML has been tested to work with Python 3.5 on Linux.  Pull requests 
 .. toctree::
    :maxdepth: 2
 
+   installation
    usage/index
 
