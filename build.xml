@@ -53,14 +53,16 @@
     <prop-replace source="${src}/templated_yaml/settings.py" dest="${build}/src/templated_yaml/settings.py" />
   </target>
 
-  <target name="test" depends="build">
+  <target name="venv-install" depends="build">
     <!-- install templated-yaml into tools venv -->
     <exec executable="${tools.venv}/bin/pip">
       <arg value="install" />
       <arg value="--upgrade" />
       <arg value="${build}/src" />
     </exec>
+  </target>
 
+  <target name="test" depends="venv-install">
     <!-- run tests -->
     <exec executable="${tools.venv}/bin/pytest">
       <arg value="-s" />
@@ -77,6 +79,15 @@
       <arg value="${build}/src/setup.py" />
       <arg value="sdist" />
       <arg value="--dist-dir=${dist}" />
+    </exec>
+  </target>
+
+  <target name="docs" depends="venv-install" description="generate the documentation">
+    <exec executable="${tools.venv}/bin/sphinx-build">
+        <arg value="-d" />
+        <arg value="docs/build/doctrees" />
+        <arg value="docs/source" />
+        <arg value="docs/build/html" />
     </exec>
   </target>
 

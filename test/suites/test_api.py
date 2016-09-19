@@ -53,3 +53,13 @@ def test_newline_render():
 
 def test_list_variable_substitution():
     run_test('tyaml.list-variable-substitution')
+
+
+def test_sphinx_examples():
+    run_test('tyaml.sphinx.simple')
+    run_test('tyaml.sphinx.mixins')
+
+def test_context_overlay():
+    result = tapi.render_from_string("name: wrong", context={ 'name': 'right'})
+
+    assert result['name'] == 'right'

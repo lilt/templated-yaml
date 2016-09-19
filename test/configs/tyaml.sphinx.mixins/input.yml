@@ -1,0 +1,4 @@
+tyaml.mixins:
+  - base.yml
+
+full_name: "Sir {{ name }}"
