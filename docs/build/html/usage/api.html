@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Module Description &mdash; Templated YAML 0.1.3 documentation</title>
+  <title>Module Description &mdash; Templated YAML 0.1.4 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="Templated YAML 0.1.3 documentation" href="../index.html"/>
+    <link rel="top" title="Templated YAML 0.1.4 documentation" href="../index.html"/>
         <link rel="up" title="Usage/Examples" href="index.html"/>
         <link rel="prev" title="Pre-Processors" href="pre-processor.html"/> 
 
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.1.3
+                0.1.4
               </div>
             
           
@@ -86,6 +86,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Usage/Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="cli.html">Command-Line Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple.html">Simple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globals.html">Globals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pre-processor.html">Pre-Processors</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module Description</a><ul class="simple">
 </ul>
@@ -145,7 +146,7 @@
 <p>The api can be found in the templated_yaml.api module.</p>
 <dl class="function">
 <dt id="templated_yaml.api.render_from_path">
-<code class="descclassname">templated_yaml.api.</code><code class="descname">render_from_path</code><span class="sig-paren">(</span><em>path</em>, <em>context={}</em><span class="sig-paren">)</span><a class="headerlink" href="#templated_yaml.api.render_from_path" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">templated_yaml.api.</code><code class="descname">render_from_path</code><span class="sig-paren">(</span><em>path</em>, <em>context={}</em>, <em>globals=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#templated_yaml.api.render_from_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renders a templated yaml document from file path.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -154,10 +155,11 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>path</strong> &#8211; A path to the yaml file to process.</li>
 <li><strong>context</strong> &#8211; A context to overlay on the yaml file.  This will override any yaml values.</li>
+<li><strong>globals</strong> &#8211; A dictionary of globally-accessible objects within the rendered template.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dict with the final overlayed configration.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dict with the final overlayed configuration.</p>
 </td>
 </tr>
 </tbody>
@@ -166,7 +168,7 @@
 
 <dl class="function">
 <dt id="templated_yaml.api.render_from_string">
-<code class="descclassname">templated_yaml.api.</code><code class="descname">render_from_string</code><span class="sig-paren">(</span><em>content</em>, <em>context={}</em><span class="sig-paren">)</span><a class="headerlink" href="#templated_yaml.api.render_from_string" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">templated_yaml.api.</code><code class="descname">render_from_string</code><span class="sig-paren">(</span><em>content</em>, <em>context={}</em>, <em>globals=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#templated_yaml.api.render_from_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renders a templated yaml document from a string.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -175,10 +177,11 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>content</strong> &#8211; The yaml string to evaluate.</li>
 <li><strong>context</strong> &#8211; A context to overlay on the yaml file.  This will override any yaml values.</li>
+<li><strong>globals</strong> &#8211; A dictionary of globally-accessible objects within the rendered template.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dict with the final overlayed configration.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A dict with the final overlayed configuration.</p>
 </td>
 </tr>
 </tbody>
@@ -226,7 +229,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.3',
+            VERSION:'0.1.4',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

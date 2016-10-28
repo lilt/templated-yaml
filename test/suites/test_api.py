@@ -1,5 +1,7 @@
 import templated_yaml.api as tapi, yaml
 import os
+from jinja2 import nodes
+from jinja2.ext import Extension
 
 
 def get_test_paths(folder):
@@ -59,7 +61,17 @@ def test_sphinx_examples():
     run_test('tyaml.sphinx.simple')
     run_test('tyaml.sphinx.mixins')
 
+
 def test_context_overlay():
     result = tapi.render_from_string("name: wrong", context={ 'name': 'right'})
 
     assert result['name'] == 'right'
+
+
+def test_globals():
+    def global_func():
+        return 'globaled'
+
+    result = tapi.render_from_string("global: '{{ global_func() }}'", globals={ 'global_func': global_func })
+    assert result['global'] == 'globaled'
+    

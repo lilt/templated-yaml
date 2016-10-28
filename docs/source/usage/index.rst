@@ -10,5 +10,6 @@ will use the cli and then give an example of embedding templated_yaml into anoth
 
    cli
    simple
+   globals
    pre-processor
    api

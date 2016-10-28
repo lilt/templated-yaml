@@ -1,11 +1,11 @@
 import yaml, collections, os
-from jinja2 import Template
+from jinja2 import Template, Environment
 
 
 class TYamlProcessors(object):
 
     @classmethod
-    def mixins(cls, resolver, current_context, value):
+    def mixins(cls, resolver, current_context, template_env, value):
         for mixin in value:
             base_dir = os.path.dirname(resolver._original_file) if resolver._original_file else os.getcwd()
             base_file_path = os.path.abspath(os.path.join(
@@ -15,7 +15,7 @@ class TYamlProcessors(object):
 
             parent_resolver = TYamlResolver.new_from_path(base_file_path)
 
-            current_context = { **parent_resolver.resolve(current_context), **current_context }
+            current_context = { **parent_resolver.resolve(current_context, template_env=template_env), **current_context }
 
         return current_context
 
@@ -48,8 +48,11 @@ class TYamlResolver(object):
 
         return resolver
 
-    def resolve(self, context=None):
-        if not context: context = {}
+    def resolve(self, context=None, globals=None, template_env=None):
+        if context is None: context = {}
+        if template_env is None: 
+            template_env = Environment()
+            template_env.globals.update(globals) 
 
         current_context = { **self._data, **context }
         def enumerate_object(obj):
@@ -82,18 +85,14 @@ class TYamlResolver(object):
 
         for processor, item, node_parent, node_key in pre_processors:
             del node_parent[node_key]
-            current_context = processor(self, current_context, item)
+            current_context = processor(self, current_context, template_env, item)
 
-        queued_updates = []
         # do variable substitution on any strings, since they may contain template variables
         for parent, key_chain, item in walk_dict(current_context):
             if isinstance(item, str):
-                template = Template(item)
+                template = template_env.from_string(item)
+                
                 #queued_updates.append((parent, key_chain[-1], template.render(current_context)))
                 parent[key_chain[-1]] = template.render(current_context)
-
-        #for node, key, value in queued_updates:
-        #    node[key] = value
-
 
         return current_context

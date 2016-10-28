@@ -10,6 +10,7 @@
   <property name="tools" location="tools" />
   <property name="tools.venv" location="${tools}/venv" />
   <property name="dist" location="dist" />
+  <property name="docs" location="docs" />
 
   <macrodef name="prop-replace">
     <attribute name="source" />
@@ -72,7 +73,7 @@
     </exec>
   </target>
 
-  <target name="dist" depends="build" description="generate the distribution">
+  <target name="dist" depends="clean, build" description="generate the distribution">
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}"/>
     <exec executable="${tools.venv}/bin/python" dir="${build}/src">
@@ -85,9 +86,9 @@
   <target name="docs" depends="venv-install" description="generate the documentation">
     <exec executable="${tools.venv}/bin/sphinx-build">
         <arg value="-d" />
-        <arg value="docs/build/doctrees" />
-        <arg value="docs/source" />
-        <arg value="docs/build/html" />
+        <arg value="${docs}/build/doctrees" />
+        <arg value="${docs}/source" />
+        <arg value="${docs}/build/html" />
     </exec>
   </target>
 
@@ -96,5 +97,6 @@
     <delete dir="${build}" />
     <delete dir="${dist}" />
     <delete dir="${tools.venv}" />
+    <delete dir="${docs}/build" />
   </target>
 </project>

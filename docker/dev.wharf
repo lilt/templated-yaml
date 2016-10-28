@@ -1,6 +1,6 @@
 ---
 dockerfile: |
-  FROM naz/baseimage:v1
+  FROM phusion/baseimage:0.9.19
 
   # Get newest package list
   RUN apt-get update && \
