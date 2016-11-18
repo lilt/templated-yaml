@@ -1,0 +1,8 @@
+---
+
+tyaml.mixins:
+  - 'base.yml'
+
+first_name: child
+last_name: last
+full_name: "{{ parent.first_name }} {{ last_name }}"

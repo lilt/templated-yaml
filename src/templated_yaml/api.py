@@ -1,5 +1,6 @@
 import os, yaml
 from . import resolver
+from .context import Context
 
 
 def render_from_path(path, context={}, globals=[]):
@@ -14,7 +15,7 @@ def render_from_path(path, context={}, globals=[]):
     abs_source = os.path.abspath(os.path.expanduser(path))
     yaml_resolver = resolver.TYamlResolver.new_from_path(abs_source)
 
-    return yaml_resolver.resolve(context, globals)
+    return yaml_resolver.resolve(Context(context), globals)._data
 
 
 def render_from_string(content, context={}, globals=[]):
@@ -28,4 +29,4 @@ def render_from_string(content, context={}, globals=[]):
     """
     yaml_resolver = resolver.TYamlResolver.new_from_string(content)
 
-    return yaml_resolver.resolve(context, globals)
+    return yaml_resolver.resolve(Context(context), globals)._data

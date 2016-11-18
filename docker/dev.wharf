@@ -2,12 +2,7 @@
 dockerfile: |
   FROM phusion/baseimage:0.9.19
 
-  # Get newest package list
-  RUN apt-get update && \
-      apt-get upgrade -y
-
-  # Install base packages for development
-  RUN apt-get install -y \
+  RUN apt-get update && apt-get install -y \
       sudo \
       ant \
       default-jdk \

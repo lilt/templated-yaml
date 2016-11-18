@@ -1,0 +1,3 @@
+api_root: http://productiondomain.com
+test_api_path: "http://testdomain.com/users"
+production_api_path: "http://productiondomain.com/users"

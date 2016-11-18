@@ -1,0 +1,6 @@
+tyaml.mixins:
+  - base.yml
+
+api_root: http://productiondomain.com
+test_api_path: "{{ parent.api_root }}/users"
+production_api_path: "{{ api_root }}/users"

@@ -1,0 +1,6 @@
+tyaml.mixins:
+  - newyork.yml
+  - miami.yml
+
+weather: unknown
+description: "It's going to be a {{ parent.weather }} day!"

@@ -1,7 +1,9 @@
 import templated_yaml.api as tapi, yaml
+from templated_yaml.context import ContextInitializationError
 import os
 from jinja2 import nodes
 from jinja2.ext import Extension
+import pytest
 
 
 def get_test_paths(folder):
@@ -19,7 +21,7 @@ def config_path(folder, file):
 
 def run_test(test_name):
     input, output = get_test_paths(test_name)
-    processed_input = tapi.render_from_path(input)
+    processed_input = { k:v for k,v in tapi.render_from_path(input).items() if k != 'parent' }
     expected_output = yaml.load(get_contents(output))
 
     assert processed_input == expected_output
@@ -60,7 +62,9 @@ def test_list_variable_substitution():
 def test_sphinx_examples():
     run_test('tyaml.sphinx.simple')
     run_test('tyaml.sphinx.mixins')
-
+    run_test('tyaml.sphinx.parent')
+    run_test('tyaml.sphinx.multiple_parent')
+    
 
 def test_context_overlay():
     result = tapi.render_from_string("name: wrong", context={ 'name': 'right'})
@@ -75,3 +79,10 @@ def test_globals():
     result = tapi.render_from_string("global: '{{ global_func() }}'", globals={ 'global_func': global_func })
     assert result['global'] == 'globaled'
     
+
+def test_list_at_root():
+    with pytest.raises(ContextInitializationError):
+        run_test('tyaml.list_at_root')
+
+def test_parent_access():
+    run_test('tyaml.parent_access')

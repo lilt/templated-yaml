@@ -1,5 +1,6 @@
 import yaml, collections, os
 from jinja2 import Template, Environment
+from .context import Context
 
 
 class TYamlProcessors(object):
@@ -14,10 +15,11 @@ class TYamlProcessors(object):
             ))
 
             parent_resolver = TYamlResolver.new_from_path(base_file_path)
-
-            current_context = { **parent_resolver.resolve(current_context, template_env=template_env), **current_context }
-
-        return current_context
+            parent_context = parent_resolver.resolve(Context(), template_env=template_env)
+            
+            current_context.add(parent_context.data)
+            current_context.add_parent(parent_context) 
+        
 
 class TYamlResolver(object):
 
@@ -49,18 +51,17 @@ class TYamlResolver(object):
         return resolver
 
     def resolve(self, context=None, globals=None, template_env=None):
-        if context is None: context = {}
+        if context is None: context = Context()
         if template_env is None: 
             template_env = Environment()
             template_env.globals.update(globals) 
 
-        current_context = { **self._data, **context }
+        context.add(self._data)
         def enumerate_object(obj):
             try:
                 return obj.items()
             except:
                 return enumerate(obj)
-
 
         def walk_dict(node, keys=None):
             if not keys: keys = []
@@ -74,25 +75,25 @@ class TYamlResolver(object):
                 yield node, key_chain, item
 
         pre_processors = []
-
+        
         # get a list of pre-processors to handle tyaml directives easier
-        for parent, key_chain, item in walk_dict(current_context):
+        for parent, key_chain, item in walk_dict(context._data):
             key = '.'.join([str(i) for i in key_chain]).lower()
-
+            
             processor = TYamlResolver.processors.get(key, None)
             if processor:
-                pre_processors += [(processor, item, parent, key_chain[-1])]
-
-        for processor, item, node_parent, node_key in pre_processors:
-            del node_parent[node_key]
-            current_context = processor(self, current_context, template_env, item)
+                pre_processors += [(processor, item, parent, key_chain[-1], key_chain)]
+        
+        # apply the pre-processors
+        for processor, item, node_parent, node_key, key_chain in pre_processors:
+            processor(self, context, template_env, item)
+            context.delete_node(key_chain)
 
         # do variable substitution on any strings, since they may contain template variables
-        for parent, key_chain, item in walk_dict(current_context):
+        for parent, key_chain, item in walk_dict(context._data):
             if isinstance(item, str):
                 template = template_env.from_string(item)
                 
-                #queued_updates.append((parent, key_chain[-1], template.render(current_context)))
-                parent[key_chain[-1]] = template.render(current_context)
+                parent[key_chain[-1]] = template.render(context.data)
 
-        return current_context
+        return context
