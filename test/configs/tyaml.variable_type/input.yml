@@ -1,0 +1,12 @@
+number: 1
+list: 
+  - first
+  - second
+
+tree:
+  branch:
+    leaf: green
+
+number_ref: "{{ number }}"
+list_ref: "{{ list }}"
+tree_ref: "{{ tree }}"

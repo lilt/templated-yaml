@@ -1,0 +1,15 @@
+number: 1
+list: 
+  - first
+  - second
+tree:
+  branch:
+    leaf: green
+
+number_ref: 1
+list_ref: 
+  - first
+  - second
+tree_ref:
+  branch:
+    leaf: green

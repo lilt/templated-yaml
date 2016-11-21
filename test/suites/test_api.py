@@ -86,3 +86,9 @@ def test_list_at_root():
 
 def test_parent_access():
     run_test('tyaml.parent_access')
+
+def test_variable_type():
+    run_test('tyaml.variable_type')
+
+def test_variable_chaining():
+    run_test('tyaml.variable_chaining')

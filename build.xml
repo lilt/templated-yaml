@@ -58,7 +58,7 @@
     <!-- install templated-yaml into tools venv -->
     <exec executable="${tools.venv}/bin/pip">
       <arg value="install" />
-      <arg value="--upgrade" />
+      <arg value="--ignore-installed" />
       <arg value="${build}/src" />
     </exec>
   </target>
@@ -79,6 +79,11 @@
     <exec executable="${tools.venv}/bin/python" dir="${build}/src">
       <arg value="${build}/src/setup.py" />
       <arg value="sdist" />
+      <arg value="--dist-dir=${dist}" />
+    </exec>
+    <exec executable="${tools.venv}/bin/python" dir="${build}/src">
+      <arg value="${build}/src/setup.py" />
+      <arg value="bdist_wheel" />
       <arg value="--dist-dir=${dist}" />
     </exec>
   </target>
