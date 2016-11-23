@@ -1,0 +1,13 @@
+prop: "{{ get_a() }}"
+b: "{{ prop.val+1 }}"
+c: "{{ prop.val+2 }}"
+d: "{{ prop.val+3 }}"
+
+
+ip1: 10.0.0.1
+ip2: 10.0.0.2
+ipgroups:
+  - "{{ ip1 }}"
+  - "{{ ip2 }}"
+ipgrouplist: 
+  - "{{ ipgroups }}"

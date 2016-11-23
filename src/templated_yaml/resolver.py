@@ -66,7 +66,7 @@ class TYamlResolver(object):
         if context is None: context = Context()
         if template_env is None: 
             template_env = Environment()
-            template_env.globals.update(globals) 
+            template_env.globals.update(globals or {}) 
 
         context.add(self._data)
         def enumerate_object(obj):
@@ -119,17 +119,6 @@ class TYamlResolver(object):
             else:
                 parent[key] = item
 
-        # do variable substitution on any strings, since they may contain template variables
-        for parent, key_chain, item in walk_dict(context._data):
-            syntax_tree = template_env.parse(item)
-            referenced_vars = get_referenced_template_vars(syntax_tree)
-            dep = DependencyGraph(item, referenced_vars, parent, key_chain[-1])
-            
-            dependent_nodes[join_key_chain(key_chain[:-1])].refs.add(join_key_chain(key_chain))
-                
-            dependent_nodes[join_key_chain(key_chain)] = dep 
-                
-
         def solve_dependencies(dep):
             for ref_key in dep.refs:
                 ref = dependent_nodes.get(ref_key, None)
@@ -143,6 +132,20 @@ class TYamlResolver(object):
                 resolve(dep.parent, dep.node_key, dep.template)
 
             dep.resolved = True
+
+        # do variable substitution on any strings, since they may contain template variables
+        for parent, key_chain, item in walk_dict(context._data):
+            syntax_tree = template_env.parse(item)
+            referenced_vars = get_referenced_template_vars(syntax_tree).difference(set(template_env.globals.keys()))
+            
+            dep = DependencyGraph(item, referenced_vars, parent, key_chain[-1])
+            
+            dependent_nodes[join_key_chain(key_chain[:-1])].refs.add(join_key_chain(key_chain))
+            dependent_nodes[join_key_chain(key_chain)] = dep 
+
+            # If this doesn't have any dependencies then solve the node immediately so its value will be available to callers.
+            if not any(dep.refs):
+                solve_dependencies(dep)
 
         for dep in dependent_nodes.values():
             solve_dependencies(dep)

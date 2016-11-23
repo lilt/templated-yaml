@@ -3,7 +3,7 @@ from . import resolver
 from .context import Context
 
 
-def render_from_path(path, context={}, globals=[]):
+def render_from_path(path, context=None, globals=None):
     """
     Renders a templated yaml document from file path.
 
@@ -18,7 +18,7 @@ def render_from_path(path, context={}, globals=[]):
     return yaml_resolver.resolve(Context(context), globals)._data
 
 
-def render_from_string(content, context={}, globals=[]):
+def render_from_string(content, context=None, globals=None):
     """
     Renders a templated yaml document from a string.
 

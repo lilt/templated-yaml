@@ -19,9 +19,9 @@ def config_path(folder, file):
     return os.path.join(os.path.dirname(os.path.dirname(__file__)), 'configs/{}/{}'.format(folder, file))
 
 
-def run_test(test_name):
+def run_test(test_name, globals=None):
     input, output = get_test_paths(test_name)
-    processed_input = { k:v for k,v in tapi.render_from_path(input).items() if k != 'parent' }
+    processed_input = { k:v for k,v in tapi.render_from_path(input, globals=globals).items() if k != 'parent' }
     expected_output = yaml.load(get_contents(output))
 
     assert processed_input == expected_output
@@ -92,3 +92,9 @@ def test_variable_type():
 
 def test_variable_chaining():
     run_test('tyaml.variable_chaining')
+
+def test_variable_chaining_with_globals():
+    def get_a():
+        return { 'val': 1 }
+
+    run_test('tyaml.variable_chaining_with_globals', globals={ 'get_a': get_a })
