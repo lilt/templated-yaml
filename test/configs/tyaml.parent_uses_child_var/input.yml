@@ -1,0 +1,6 @@
+---
+
+tyaml.mixins:
+  - 'base.yml'
+
+first_name: child

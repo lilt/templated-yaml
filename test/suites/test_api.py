@@ -59,6 +59,10 @@ def test_list_variable_substitution():
     run_test('tyaml.list-variable-substitution')
 
 
+def test_parent_uses_child_var():
+    run_test('tyaml.parent_uses_child_var')
+
+
 def test_sphinx_examples():
     run_test('tyaml.sphinx.simple')
     run_test('tyaml.sphinx.mixins')

@@ -23,7 +23,7 @@ class Context(object):
 
     @property
     def parent(self):
-        return self._parent
+        return self._parent 
 
     def add_parent(self, parent_context):
         if not self.parent:

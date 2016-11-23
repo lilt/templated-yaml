@@ -1,7 +1,7 @@
 import yaml, collections, os
 from jinja2 import Template, Environment
 from .context import Context
-import ast
+import ast, copy
 from .meta import get_referenced_template_vars
 from collections import namedtuple
 
@@ -19,6 +19,9 @@ class TYamlProcessors(object):
 
     @classmethod
     def mixins(cls, resolver, current_context, template_env, value):
+        # TODO: This should probably be simplified, the context is resolved multiple times and
+        #       that's probably unnecessary. 
+
         for mixin in value:
             base_dir = os.path.dirname(resolver._original_file) if resolver._original_file else os.getcwd()
             base_file_path = os.path.abspath(os.path.join(
@@ -27,9 +30,14 @@ class TYamlProcessors(object):
             ))
 
             parent_resolver = TYamlResolver.new_from_path(base_file_path)
-            parent_context = parent_resolver.resolve(Context(), template_env=template_env)
+            merged_resolver = parent_resolver.copy()
             
-            current_context.add(parent_context.data)
+            # Resolve once to get what the parent would be without any child context
+            parent_context = parent_resolver.resolve(Context(), template_env=template_env)
+            # Resolve again to get what the final context should be taking into account any child context
+            merged_context = merged_resolver.resolve(Context(current_context.data), template_env=template_env)
+
+            current_context.add(merged_context.data)
             current_context.add_parent(parent_context) 
         
 
@@ -59,6 +67,12 @@ class TYamlResolver(object):
     def new_from_string(cls, content):
         resolver = TYamlResolver(yaml.load(content))
         resolver._original_file = None
+
+        return resolver
+
+    def copy(self):
+        resolver = TYamlResolver(copy.deepcopy(self._data))
+        resolver._original_file = self._original_file
 
         return resolver
 
@@ -98,8 +112,10 @@ class TYamlResolver(object):
         
         # apply the pre-processors
         for processor, item, node_parent, node_key, key_chain in pre_processors:
-            processor(self, context, template_env, item)
+            # Delete the pre-processor so it's not applied again and is not returned with the 
+            # final context.
             context.delete_node(key_chain)
+            processor(self, context, template_env, item)
 
         dependent_nodes = {
             ROOT_REF_KEY: DependencyGraph(self._data, set(), None, None)
