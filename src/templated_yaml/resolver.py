@@ -23,20 +23,27 @@ class TYamlProcessors(object):
         #       that's probably unnecessary. 
 
         for mixin in value:
+            namespace = None
+            filepath = mixin
+
+            if type(mixin) is dict:
+                namespace = mixin['namespace']
+                filepath = mixin['file']
+
             base_dir = os.path.dirname(resolver._original_file) if resolver._original_file else os.getcwd()
             base_file_path = os.path.abspath(os.path.join(
                 base_dir,
-                mixin
+                filepath
             ))
 
-            parent_resolver = TYamlResolver.new_from_path(base_file_path)
-            merged_resolver = parent_resolver.copy()
+            parent_resolver = TYamlResolver.new_from_path(base_file_path, namespace=namespace)
             
             # Resolve once to get what the parent would be without any child context
             parent_context = parent_resolver.resolve(Context(), template_env=template_env)
+            
             # Resolve again to get what the final context should be taking into account any child context
-            merged_context = merged_resolver.resolve(Context(current_context.data), template_env=template_env)
-
+            merged_context = parent_resolver.resolve(Context(current_context.data), template_env=template_env)
+            
             current_context.add(merged_context.data)
             current_context.add_parent(parent_context) 
         
@@ -47,25 +54,31 @@ class TYamlResolver(object):
         'tyaml.mixins': TYamlProcessors.mixins
     }
 
-    def __init__(self, data):
+    def __init__(self, data, namespace=None):
         self._original_file = None
-        self._data = data
+        self._namespace = namespace
+        if namespace:
+            self._data = {
+                namespace: data
+            }
+        else:
+            self._data = data
 
     @classmethod
-    def new_from_path(cls, abs_path):
+    def new_from_path(cls, abs_path, **kwargs):
         yaml_source = None
 
         with open(abs_path, 'r') as stream:
             yaml_source = yaml.load(stream)
 
-        resolver = TYamlResolver(yaml_source)
+        resolver = TYamlResolver(yaml_source, **kwargs)
         resolver._original_file = abs_path
 
         return resolver
 
     @classmethod
-    def new_from_string(cls, content):
-        resolver = TYamlResolver(yaml.load(content))
+    def new_from_string(cls, content, **kwargs):
+        resolver = TYamlResolver(yaml.load(content), **kwargs)
         resolver._original_file = None
 
         return resolver

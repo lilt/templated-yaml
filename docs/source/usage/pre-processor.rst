@@ -97,3 +97,30 @@ When using multiple parents, later mixins will override the variables of earlier
 
   weather: unknown
   description: "It's going to be a sunny day!"
+
+Alternatively you can specify a namespace for your mixin, which will place all parent context within a varible.
+This is useful if you are worried about variable collision.
+
+*input.yml*
+
+.. code-block:: yaml
+
+   tyaml.mixins:
+     - namespace: prefix 
+       file: base.yml
+
+   value: "{{ prefix.value }} John Doe"
+
+*base.yml*
+
+.. code-block:: yaml
+
+    value: Dr
+
+*output.yml*
+
+.. code-block:: yaml
+
+    prefix:
+      value: Dr
+    value: Dr John Doe

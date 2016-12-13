@@ -1,0 +1,9 @@
+---
+
+tyaml.mixins:
+  - file: 'base.yml'
+    namespace: 'salutation'
+
+first_name: first
+last_name: last
+full_name: "{{ salutation.name }} {{ first_name }} {{ last_name }}"

@@ -1,0 +1,5 @@
+tyaml.mixins:
+  - namespace: prefix
+    file: base.yml
+
+value: "{{ prefix.value }} John Doe"

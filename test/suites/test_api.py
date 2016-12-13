@@ -39,6 +39,10 @@ def test_extends_render():
     run_test('tyaml.extends')
 
 
+def test_namespacedextends_render():
+    run_test('tyaml.namespaced-extends')
+
+
 def test_extends_multiple_parents_render():
     run_test('tyaml.extends-multiple-parents')
 
@@ -68,6 +72,7 @@ def test_sphinx_examples():
     run_test('tyaml.sphinx.mixins')
     run_test('tyaml.sphinx.parent')
     run_test('tyaml.sphinx.multiple_parent')
+    run_test('tyaml.sphinx.parent-namespace')
     
 
 def test_context_overlay():
