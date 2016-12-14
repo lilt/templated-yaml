@@ -1,5 +1,5 @@
 import yaml, collections, os
-from jinja2 import Template, Environment
+from jinja2 import Template, Environment, exceptions, StrictUndefined
 from .context import Context
 import ast, copy
 from .meta import get_referenced_template_vars
@@ -92,7 +92,7 @@ class TYamlResolver(object):
     def resolve(self, context=None, globals=None, template_env=None):
         if context is None: context = Context()
         if template_env is None: 
-            template_env = Environment()
+            template_env = Environment(undefined=StrictUndefined)
             template_env.globals.update(globals or {}) 
 
         context.add(self._data)
@@ -137,7 +137,10 @@ class TYamlResolver(object):
         def resolve(parent, key, item):
             if isinstance(item, str):
                 template = template_env.from_string(item)
-                value = template.render(context.data)
+                try:
+                    value = template.render(context.data)
+                except exceptions.UndefinedError:
+                    return
                 
                 try:
                     value = ast.literal_eval(value)

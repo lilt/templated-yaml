@@ -1,0 +1,3 @@
+colors: 
+  green: green
+  strange: "{{ consistency }}"

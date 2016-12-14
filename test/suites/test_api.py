@@ -70,6 +70,7 @@ def test_parent_uses_child_var():
 def test_sphinx_examples():
     run_test('tyaml.sphinx.simple')
     run_test('tyaml.sphinx.mixins')
+    run_test('tyaml.sphinx.mixins')
     run_test('tyaml.sphinx.parent')
     run_test('tyaml.sphinx.multiple_parent')
     run_test('tyaml.sphinx.parent-namespace')
@@ -101,6 +102,11 @@ def test_variable_type():
 
 def test_variable_chaining():
     run_test('tyaml.variable_chaining')
+
+
+def test_complex_multiple_parents():
+    run_test('tyaml.complex-multi-parent')
+
 
 def test_variable_chaining_with_globals():
     def get_a():

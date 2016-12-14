@@ -1,0 +1,5 @@
+tyaml.mixins:
+  - base2.yml
+  - /workspace/test/configs/tyaml.sphinx.mixins-abspath/base.yml
+
+full_name: "Sir {{ name }}"

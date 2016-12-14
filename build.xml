@@ -68,6 +68,7 @@
     <exec executable="${tools.venv}/bin/pytest">
       <arg value="-s" />
       <arg value="-v" />
+      
       <arg value="test/suites" />
       <env key="TYAML_EXECUTABLE" value="${tools.venv}/bin/tyaml" />
       <env key="TYAML_VERSION" value="${version.string}" />

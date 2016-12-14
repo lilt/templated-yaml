@@ -1,0 +1,6 @@
+tyaml.mixins:
+  - colors.yml
+  - fruits.yml
+
+consistency: chewy
+favorite: "{{ colors.green }} {{ fruits.orange }}"
