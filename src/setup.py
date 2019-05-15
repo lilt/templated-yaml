@@ -23,7 +23,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='{{ version.major }}.{{ version.minor }}.{{ version.patch }}',
+    version='1.1.2',
 
     description='A helper library that allows hierarchical YAML files with variable substitution.',
     long_description=long_description,
